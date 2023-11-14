@@ -1,3 +1,7 @@
+import pandas as pd
+import statsmodels.api as sm
+
+
 def ej_1_statmodels_intervalo_confianza() -> tuple[float, tuple[float, float]]:
     """Esta función realiza lo siguiente
     * Carga el archivo que contiene el dataset (datos.csv)
@@ -11,7 +15,20 @@ def ej_1_statmodels_intervalo_confianza() -> tuple[float, tuple[float, float]]:
         la predicción media, y como segundo valor una tupla que representa el
         intérvalo de confianza.
     """
-    pass
+    data = pd.read_csv('datos.csv')
+    x_arr = data[['x1','x2','x4']].values
+    y_arr = data['x3']
+
+    constants = sm.add_constant(x_arr)
+    model = sm.OLS(y_arr, constants)
+    results = model.fit()
+
+    new_X = [1, 100, 12, 9.2]
+    prediction = results.get_prediction(new_X)
+    pred_mean = prediction.predicted_mean
+    conf_int = prediction.conf_int()
+
+    return (pred_mean, conf_int)
 
 
 def ej_2_sklearn_coeficientes() -> tuple[float, float, float]:
@@ -26,3 +43,6 @@ def ej_2_sklearn_coeficientes() -> tuple[float, float, float]:
     """
     # Definir las variables X y y
     pass
+
+
+ej_1_statmodels_intervalo_confianza()
